@@ -8,15 +8,18 @@
     See LICENSES/GPL-2.0-only for more information.
 """
 
-from six.moves import html_parser
+from __future__ import absolute_import, division, unicode_literals
 
 from .base_item import BaseItem
+from ..compatibility import unescape
 
 
 class AudioItem(BaseItem):
-    def __init__(self, name, uri, image=u'', fanart=u''):
-        BaseItem.__init__(self, name, uri, image, fanart)
-        self._duration = None
+    _playable = True
+
+    def __init__(self, name, uri, image='', fanart=''):
+        super(AudioItem, self).__init__(name, uri, image, fanart)
+        self._duration = -1
         self._track_number = None
         self._year = None
         self._genre = None
@@ -33,8 +36,8 @@ class AudioItem(BaseItem):
 
     def set_title(self, title):
         try:
-            title = html_parser.HTMLParser().unescape(title)
-        except html_parser.HTMLParseError as _:
+            title = unescape(title)
+        except:
             pass
         self._title = title
 
